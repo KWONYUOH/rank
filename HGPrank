@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>이달의 누적 참가권 획득수 TOP 20</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<style>
+body {
+    margin:0;
+    background:#0b0b0f;
+    font-family: Arial, sans-serif;
+    color:white;
+}
+
+/* 헤더 */
+.header {
+    padding:20px;
+    font-size:30px;
+    text-align:center;
+    color:#ff1e1e;
+    font-weight:bold;
+    border-bottom:2px solid #222;
+}
+
+/* 리스트 */
+.container {
+    width:90%;
+    margin:auto;
+    padding-top:15px;
+}
+
+.row {
+    display:flex;
+    align-items:center;
+    margin:10px 0;
+    opacity:0;
+}
+
+.rank {
+    width:60px;
+    font-size:20px;
+    color:#aaa;
+}
+
+.name {
+    width:200px;
+    font-size:20px;
+}
+
+.bar {
+    flex:1;
+    height:18px;
+    background:#222;
+    margin:0 10px;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.fill {
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#ff1e1e,#ff7b00);
+}
+
+.score {
+    width:80px;
+    text-align:right;
+    font-size:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">🏆 이달의 누적 참가권 획득수 TOP 20</div>
+
+<div class="container" id="board"></div>
+
+<script>
+
+/* 📊 TOP 20 (원본 데이터 기반) */
+let data = [
+  {name:"JS", score:178},
+  {name:"재현", score:170},
+  {name:"전사의심장", score:170},
+  {name:"용국", score:165},
+  {name:"준오", score:141},
+  {name:"교자만두", score:125},
+  {name:"아리랑", score:113},
+  {name:"레이", score:107},
+  {name:"ICE", score:106},
+  {name:"싹잡아요", score:101},
+  {name:"종민", score:94},
+  {name:"윤지", score:86},
+  {name:"꿀떡", score:82},
+  {name:"림보", score:77},
+  {name:"예준", score:76},
+  {name:"띱띱", score:71},
+  {name:"권작가", score:70},
+  {name:"마귀", score:70},
+  {name:"도현", score:69},
+  {name:"조슬기", score:64}
+];
+
+const board = document.getElementById("board");
+
+/* 🏁 렌더 */
+function render(){
+
+    data.sort((a,b)=>b.score-a.score);
+
+    const max = data[0].score;
+
+    board.innerHTML = "";
+
+    data.forEach((d,i)=>{
+
+        const row = document.createElement("div");
+        row.className="row";
+
+        row.innerHTML = `
+            <div class="rank">${i+1}</div>
+            <div class="name">${d.name}</div>
+            <div class="bar"><div class="fill"></div></div>
+            <div class="score">${d.score}</div>
+        `;
+
+        board.appendChild(row);
+
+        const fill = row.querySelector(".fill");
+
+        /* 🎬 등장 애니메이션 */
+        gsap.fromTo(row,
+            {opacity:0, y:10},
+            {opacity:1, y:0, duration:0.4, delay:i*0.05}
+        );
+
+        /* 📊 바 애니메이션 */
+        gsap.to(fill,{
+            width:(d.score/max)*100 + "%",
+            duration:0.8,
+            delay:i*0.05
+        });
+
+        /* 🔥 강조 */
+        gsap.from(row,{
+            backgroundColor:"#2a0000",
+            duration:0.5,
+            delay:i*0.05
+        });
+
+    });
+}
+
+/* 🚀 시작 */
+render();
+
+/* 🔁 10초마다 리프레시 */
+setInterval(() => {
+    render();
+}, 10000);
+
+</script>
+
+</body>
+</html>
